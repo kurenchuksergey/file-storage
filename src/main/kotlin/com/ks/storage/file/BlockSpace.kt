@@ -94,7 +94,6 @@ internal class BlockSpace(
     private fun FileChannel.moveToBlock(blockID: BlockID) =
         this.position(offset + blockCount / 8 + blockSize * blockID)
 
-    private fun ByteBuffer.fromStart() = this.position(0)
 
     private fun saveSpaceMap() {
         channel.position(offset).write(
