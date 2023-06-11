@@ -1,6 +1,7 @@
-package com.ks.storage.file
+package com.ks.storage.file.space.hierarchy
 
 import com.ks.storage.file.exceptions.StorageException
+import com.ks.storage.file.space.blocks.BlockID
 import java.io.*
 import java.nio.charset.Charset
 

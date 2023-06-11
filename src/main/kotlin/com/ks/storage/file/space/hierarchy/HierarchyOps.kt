@@ -1,6 +1,7 @@
-package com.ks.storage.file
+package com.ks.storage.file.space.hierarchy
 
 import com.ks.storage.file.exceptions.StorageException
+import com.ks.storage.file.space.blocks.BlockID
 
 class NodeIsFolder(name: String) : StorageException("Node: $name is a folder")
 

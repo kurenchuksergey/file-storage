@@ -1,5 +1,7 @@
 package com.ks.storage.file
 
+import com.ks.storage.file.space.blocks.Block
+import com.ks.storage.file.space.blocks.BlockSpace
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

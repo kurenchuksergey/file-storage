@@ -1,5 +1,6 @@
-package com.ks.storage.file
+package com.ks.storage.file.space.blocks
 
+import com.ks.storage.file.fromStart
 import java.io.Closeable
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel

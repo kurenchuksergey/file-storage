@@ -1,4 +1,4 @@
-package com.ks.storage.file
+package com.ks.storage.file.space.blocks
 
 import com.ks.storage.file.exceptions.NoEmptySpace
 import com.ks.storage.file.exceptions.Space
