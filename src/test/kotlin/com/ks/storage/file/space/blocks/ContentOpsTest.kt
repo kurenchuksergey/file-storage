@@ -1,7 +1,5 @@
-package com.ks.storage.file
+package com.ks.storage.file.space.blocks
 
-import com.ks.storage.file.space.blocks.BlockSpace
-import com.ks.storage.file.space.blocks.ContentOps
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows

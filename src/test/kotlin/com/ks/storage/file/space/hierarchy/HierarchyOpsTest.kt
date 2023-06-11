@@ -1,8 +1,5 @@
-package com.ks.storage.file
+package com.ks.storage.file.space.hierarchy
 
-import com.ks.storage.file.space.hierarchy.HierarchyOps
-import com.ks.storage.file.space.hierarchy.HierarchySpace
-import com.ks.storage.file.space.hierarchy.NodeNotFound
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
