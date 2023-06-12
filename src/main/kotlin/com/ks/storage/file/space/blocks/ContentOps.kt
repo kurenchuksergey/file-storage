@@ -1,13 +1,12 @@
 package com.ks.storage.file.space.blocks
 
-import com.ks.storage.file.exceptions.NoEmptySpace
-import com.ks.storage.file.exceptions.Space
-import com.ks.storage.file.exceptions.StorageException
+import com.ks.storage.file.Content
+import com.ks.storage.file.api.exceptions.NoEmptySpace
+import com.ks.storage.file.api.exceptions.Space
+import com.ks.storage.file.api.exceptions.StorageException
 import java.nio.ByteBuffer
 
 class ContentEmptyException : StorageException("Content is empty.")
-
-internal typealias Content = ByteArray
 
 internal class ContentOps(
     private val blockSpace: BlockSpace
@@ -46,7 +45,13 @@ internal class ContentOps(
 
     fun write(content: Content): BlockID {
         val firstEmptySpace = blockSpace.findNextEmptyBlock(-1) ?: throw NoEmptySpace(Space.BLOCKS)
-        return write(firstEmptySpace, content)
+        return try {
+            write(firstEmptySpace, content)
+        } catch (e: Exception) {
+            //todo logger
+            delete(firstEmptySpace)
+            throw e
+        }
     }
 
     fun read(start: BlockID): Content {
@@ -73,7 +78,12 @@ internal class ContentOps(
         var currentBlock = blockSpace.readBlock(start)
         while (currentBlock.nextBlock != EB) {
             blockSpace.delete(currentBlock.blockID)
-            currentBlock = blockSpace.readBlock(currentBlock.nextBlock)
+            currentBlock = try {
+                blockSpace.readBlock(currentBlock.nextBlock)
+            } catch (e: Exception){
+                //todo logger
+                return
+            }
         }
     }
 

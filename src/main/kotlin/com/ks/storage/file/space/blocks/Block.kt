@@ -105,6 +105,10 @@ internal class Block(
                 content = ByteArray(blockSize - Int.SIZE_BYTES * 2)
             )
         }
+
+        fun efficiently(blockSize: Int): Int {
+            return blockSize - Int.SIZE_BYTES * 2
+        }
     }
 }
 

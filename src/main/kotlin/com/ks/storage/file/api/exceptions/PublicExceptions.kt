@@ -1,4 +1,4 @@
-package com.ks.storage.file.exceptions
+package com.ks.storage.file.api.exceptions
 
 enum class Space {
     STORAGE_META, HIERARCHY, BLOCKS
