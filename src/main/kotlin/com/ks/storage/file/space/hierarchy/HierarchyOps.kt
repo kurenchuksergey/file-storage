@@ -9,7 +9,6 @@ class NodeIsFolder(name: String) : StorageException("Node: $name is a folder")
 internal class HierarchyOps(
     private val hierarchySpace: HierarchySpace
 ) {
-
     fun createFile(path: Path, startBlockID: BlockID): FileNode {
         return hierarchySpace.createNode(path, FileNode(startBlockID)).also { hierarchySpace.flush() }
     }

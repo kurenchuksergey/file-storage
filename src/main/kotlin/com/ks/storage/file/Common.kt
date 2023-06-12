@@ -6,8 +6,6 @@ internal fun ByteBuffer.fromStart() = this.position(0)
 
 typealias Content = ByteArray
 
-fun Content.buffer() = ByteBuffer.wrap(this)
-
 typealias Path = String
 fun Path.name(separator: String): String {
     val lastPosition = this.lastIndexOf(separator)

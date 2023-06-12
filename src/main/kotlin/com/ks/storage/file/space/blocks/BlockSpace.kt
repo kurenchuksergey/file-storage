@@ -21,6 +21,9 @@ fun UsedSpaceMap.markFree(blockID: BlockID) {
 
 fun UsedSpaceMap.isFree(blockID: BlockID) = !this[blockID]
 
+/**
+ * BlockSpace is blocks storage, which also include used blocks map (free map inverse)
+ */
 internal class BlockSpace(
     private val blockCount: Int,
     private val blockSize: Int, //byte

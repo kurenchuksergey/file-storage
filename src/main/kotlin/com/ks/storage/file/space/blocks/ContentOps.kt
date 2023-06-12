@@ -5,6 +5,8 @@ import com.ks.storage.file.api.exceptions.NoEmptySpace
 import com.ks.storage.file.api.exceptions.Space
 import com.ks.storage.file.api.exceptions.StorageException
 import java.nio.ByteBuffer
+import java.util.logging.Level
+import java.util.logging.Logger
 
 class ContentEmptyException : StorageException("Content is empty.")
 
@@ -48,7 +50,7 @@ internal class ContentOps(
         return try {
             write(firstEmptySpace, content)
         } catch (e: Exception) {
-            //todo logger
+            logger.log(Level.SEVERE, "Can't write a file. First blockID $firstEmptySpace. Content size: ${content.size}", e)
             delete(firstEmptySpace)
             throw e
         }
@@ -81,7 +83,7 @@ internal class ContentOps(
             currentBlock = try {
                 blockSpace.readBlock(currentBlock.nextBlock)
             } catch (e: Exception){
-                //todo logger
+                logger.log(Level.SEVERE, "Can't read block for removing. blockID: ${currentBlock.nextBlock}", e)
                 return
             }
         }
@@ -95,5 +97,9 @@ internal class ContentOps(
         }
 
         write(currentBlock.blockID, currentBlock.getContent() + content)
+    }
+
+    companion object {
+        private val logger: Logger = Logger.getLogger(ContentOps::class.java.simpleName)
     }
 }

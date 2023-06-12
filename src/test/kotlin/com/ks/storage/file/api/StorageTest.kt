@@ -12,12 +12,21 @@ import java.nio.file.Path
 
 class StorageTest {
 
+    private fun getStorage() = Storage.new()
+        .efficient()
+        .path(Files.createTempFile("storage", ".data"))
+        .size(10 * 1024 * 1024)
+        .smallHierarchy()
+        .build()
+
     @Test
     fun `file import and export`() {
         val sourceData = FileTest::class.java.classLoader.getResourceAsStream("fixture.jpg").use {
             readResource(it!!)
         }
+
         val file = File("testFolder/testFile", sourceData)
+        val testStorage = getStorage()
         testStorage.createFile(file)
         val storageFile = testStorage.getFile("testFolder/testFile")
 
@@ -32,6 +41,7 @@ class StorageTest {
             readResource(it!!)
         }
         val file = File("testFolder/testFile", sourceData)
+        val testStorage = getStorage()
         testStorage.createFile(file)
         testStorage.move("testFolder/testFile", "test2/testFolder2/test.jpg")
         val storageFile = testStorage.getFile("test2/testFolder2/test.jpg")
@@ -45,13 +55,14 @@ class StorageTest {
             readResource(it!!)
         }
         val file = File("testFolder/testFile", sourceData)
+        val testStorage = getStorage()
         testStorage.createFile(file)
         testStorage.delete(file.path)
         assertThrows<NodeNotFound> { testStorage.getFile(file.path) }
     }
 
     @Test
-    fun `init - fill - close - load - check`(){
+    fun `init - fill - close - load - check`() {
         val path = Files.createTempFile("storage", ".data")
         val localStorage = Storage.new()
             .efficient()
@@ -94,14 +105,5 @@ class StorageTest {
         }
 
         return buffer.toByteArray()
-    }
-
-    companion object {
-        val testStorage = Storage.new()
-            .efficient()
-            .path(Files.createTempFile("storage", ".data"))
-            .size(10 * 1024 * 1024)
-            .smallHierarchy()
-            .build()
     }
 }

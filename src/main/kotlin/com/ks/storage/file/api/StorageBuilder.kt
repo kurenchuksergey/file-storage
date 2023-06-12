@@ -60,6 +60,7 @@ class StorageBuilder {
             "path should be setup"
         }
 
+        //predefined params
         val blockSize = if (storageType == StorageType.EFFICIENT) 32 * 1024 else 128 * 1024
         val hierarchySpaceSize =
             if (hierarchyType == StorageHierarchyType.SMALL) 1 * 1024 * 1024 else 2 * 1024 * 1024

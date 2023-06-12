@@ -11,6 +11,13 @@ typealias BlockID = Int
 internal val EB: BlockID
     get() = -1
 
+/**
+ * Block is fixed size unit of file structure.
+ * Serialized block contains:
+ * @param nextBlock - next file block. If the last, then equals to [EB]
+ * @param contentSize - block size is fixed, but content can fill block partly. This fields show block occupation
+ * @param content - row content
+ */
 internal class Block(
     @Transient
     val blockID: BlockID,

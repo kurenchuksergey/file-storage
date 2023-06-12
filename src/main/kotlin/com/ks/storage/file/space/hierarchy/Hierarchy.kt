@@ -17,6 +17,9 @@ internal data class FileNode(
 
 typealias NodeDescription = Pair<String, Node>
 
+/**
+ * Made because of fear of string serialization
+ */
 internal class PathKey(val source: ByteArray) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

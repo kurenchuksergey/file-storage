@@ -32,8 +32,8 @@ The file system is composed of three main spaces: **Meta Space**, **File Hierarc
 
 - **Hierarchy Space** consists of a prefix tree, specifically a trie, which represents the hierarchy of files and directories in the file system. This structure provide effective way for move operation
 
-- **Blocks Space** is divided into two areas: the **Free Blocks Map** and the **Raw data blocks**.
-    -  **Free Blocks Map** is an area that keeps track of the availability of blocks in the file system. It maintains a map of free blocks, indicating which blocks are available for use.
+- **Blocks Space** is divided into two areas: the **Use Blocks Map** and the **Raw data blocks**.
+    -  **Used Blocks Map** is an area that keeps track of the availability of blocks in the file system. It maintains a map of used/free blocks, indicating which blocks are available for use.
     -  **Raw data blocks** stores the actual data content of the files. These blocks have a fixed length and hold the file contents.
     By using fixed-length data blocks, the file system addresses file fragmentation without the need for defragmentation algorithms.
 

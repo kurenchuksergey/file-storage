@@ -4,6 +4,10 @@ import com.ks.storage.file.Path
 import com.ks.storage.file.space.hierarchy.FileNode
 import com.ks.storage.file.space.hierarchy.FolderNode
 import com.ks.storage.file.space.hierarchy.Node
+import java.util.logging.Level
+import java.util.logging.Logger
+
+private val logger = Logger.getLogger(Storage::class.java.simpleName)
 
 fun Storage.getFile(path: Path): File {
     val fileNode = this.hierarchyOps.getFile(path)
@@ -19,7 +23,7 @@ fun Storage.createFile(file: File) {
     try {
         this.hierarchyOps.createFile(file.path, startBlockID)
     } catch (e: Exception) {
-        //todo logger
+        logger.log(Level.SEVERE, "Can't create new file: ${file.path}. Going to remove created blocks", e)
         this.contentOps.delete(startBlockID)
         throw e
     }
