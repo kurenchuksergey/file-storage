@@ -1,32 +1,17 @@
 package com.ks.storage.file.space.hierarchy
 
-import com.ks.storage.file.exceptions.NoEmptySpace
-import com.ks.storage.file.exceptions.Space
-import com.ks.storage.file.exceptions.StorageException
+import com.ks.storage.file.Path
+import com.ks.storage.file.api.exceptions.NoEmptySpace
+import com.ks.storage.file.api.exceptions.Space
+import com.ks.storage.file.api.exceptions.StorageException
 import com.ks.storage.file.fromStart
+import com.ks.storage.file.name
+import com.ks.storage.file.parentName
 import java.io.Closeable
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 
-typealias Path = String
-
-fun Path.name(separator: String): String {
-    val lastPosition = this.lastIndexOf(separator)
-    if (lastPosition >= 0) {
-        return this.substring(this.lastIndexOf(separator) + 1)
-    }
-    return this
-}
-
 fun rootFolders(separator: String) = listOf("", separator)
-
-fun Path.parentName(separator: String): String {
-    val fileName = this.name(separator)
-    if (fileName.length == this.length) {
-        return ""
-    }
-    return this.substring(0, this.length - (this.name(separator).length + 1))
-}
 
 internal class NodeIsNotFolder(name: String) : StorageException("Node: $name is not a folder")
 
