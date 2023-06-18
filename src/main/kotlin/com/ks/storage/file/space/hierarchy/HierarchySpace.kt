@@ -1,12 +1,10 @@
 package com.ks.storage.file.space.hierarchy
 
-import com.ks.storage.file.Path
+import com.ks.storage.file.*
 import com.ks.storage.file.api.exceptions.NoEmptySpace
 import com.ks.storage.file.api.exceptions.Space
 import com.ks.storage.file.api.exceptions.StorageException
 import com.ks.storage.file.fromStart
-import com.ks.storage.file.name
-import com.ks.storage.file.parentName
 import java.io.Closeable
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
@@ -37,27 +35,27 @@ internal class HierarchySpace private constructor(
         root = FolderNode.deserialize(data)
     }
 
-    fun <T : Node> getNode(path: Path): T? {
+    fun <T : Node> getNode(path: Location): T? {
         val nodeName = path.name(separator)
         return findParentFolder(path)?.getNode(nodeName)
     }
 
-    fun deleteNode(path: Path): Node? {
-        val parent = findParentFolder(path)
-        return parent?.delete(path.name(separator))
+    fun deleteNode(location: Location): Node? {
+        val parent = findParentFolder(location)
+        return parent?.delete(location.name(separator))
     }
 
-    fun <T : Node> createNode(path: Path, node: T, merge: Boolean = false): T {
+    fun <T : Node> createNode(path: Location, node: T, merge: Boolean = false): T {
         return getOrCreateFolder(path.parentName(separator))
             .addNode(path.name(separator), node, merge)
     }
 
-    fun getOrCreateFolder(path: Path): FolderNode {
+    fun getOrCreateFolder(location: Location): FolderNode {
         var currentNode = root
-        val splitPath = path.split(separator)
+        val splitLocation = location.split(separator)
         var nameIndex = 0
-        while (nameIndex < splitPath.size) {
-            val nodeName = splitPath[nameIndex]
+        while (nameIndex < splitLocation.size) {
+            val nodeName = splitLocation[nameIndex]
             if (nodeName in rootFolders(separator)) {
                 nameIndex++
                 continue
@@ -70,21 +68,21 @@ internal class HierarchySpace private constructor(
             nameIndex++
         }
 
-        if (nameIndex == splitPath.size) {
+        if (nameIndex == splitLocation.size) {
             return currentNode
         }
 
-        while (nameIndex < splitPath.size) {
-            val nodeName = splitPath[nameIndex++]
+        while (nameIndex < splitLocation.size) {
+            val nodeName = splitLocation[nameIndex++]
             currentNode = currentNode.addNode(nodeName, FolderNode())
         }
 
         return currentNode
     }
 
-    private fun findParentFolder(path: Path): FolderNode? {
+    private fun findParentFolder(location: Location): FolderNode? {
         var currentNode = root
-        val splitPath = path.parentName(separator).split(separator)
+        val splitPath = location.parentName(separator).split(separator)
         for (nodeName in splitPath) {
             if (nodeName in rootFolders(separator)) {
                 currentNode = root

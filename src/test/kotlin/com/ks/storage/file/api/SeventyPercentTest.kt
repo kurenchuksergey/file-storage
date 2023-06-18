@@ -27,9 +27,9 @@ class SeventyPercentTest {
         val sourceFile = File("/testFolder/test.jpg", sourceData)
 
         localStorage.createFile(sourceFile)
-        localStorage.delete(sourceFile.path)
+        localStorage.delete(sourceFile.location)
         localStorage.createFile(sourceFile)
-        assertTrue(sourceData.contentEquals(localStorage.getFile(sourceFile.path).content))
+        assertTrue(sourceData.contentEquals(localStorage.getFile(sourceFile.location).content))
     }
 
     @Test
@@ -50,9 +50,9 @@ class SeventyPercentTest {
         val sourceFile = File("/testFolder/test.jpg", sourceData)
 
         localStorage.createFile(sourceFile)
-        localStorage.delete(sourceFile.path)
+        localStorage.delete(sourceFile.location)
         localStorage.createFile(sourceFile)
-        assertTrue(sourceData.contentEquals(localStorage.getFile(sourceFile.path).content))
+        assertTrue(sourceData.contentEquals(localStorage.getFile(sourceFile.location).content))
     }
 
     private fun readResource(stream: InputStream): ByteArray {

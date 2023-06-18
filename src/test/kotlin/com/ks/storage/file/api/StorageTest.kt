@@ -57,8 +57,8 @@ class StorageTest {
         val file = File("testFolder/testFile", sourceData)
         val testStorage = getStorage()
         testStorage.createFile(file)
-        testStorage.delete(file.path)
-        assertThrows<NodeNotFound> { testStorage.getFile(file.path) }
+        testStorage.delete(file.location)
+        assertThrows<NodeNotFound> { testStorage.getFile(file.location) }
     }
 
     @Test

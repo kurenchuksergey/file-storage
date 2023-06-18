@@ -1,6 +1,5 @@
 package com.ks.storage.file.space.blocks
 
-import com.ks.storage.file.Content
 import com.ks.storage.file.api.exceptions.NoEmptySpace
 import com.ks.storage.file.api.exceptions.Space
 import com.ks.storage.file.api.exceptions.StorageException
@@ -14,7 +13,7 @@ internal class ContentOps(
     private val blockSpace: BlockSpace
 ) {
 
-    private fun write(start: BlockID, content: Content): BlockID {
+    private fun write(start: BlockID, content: ByteArray): BlockID {
         if (content.isEmpty()) {
             throw ContentEmptyException()
         }
@@ -45,7 +44,7 @@ internal class ContentOps(
         return start
     }
 
-    fun write(content: Content): BlockID {
+    fun write(content: ByteArray): BlockID {
         val firstEmptySpace = blockSpace.findNextEmptyBlock(-1) ?: throw NoEmptySpace(Space.BLOCKS)
         return try {
             write(firstEmptySpace, content)
@@ -56,7 +55,7 @@ internal class ContentOps(
         }
     }
 
-    fun read(start: BlockID): Content {
+    fun read(start: BlockID): ByteArray {
         val fileBlocks = ArrayList<Block>()
         var fileSize = 0
 
@@ -89,7 +88,7 @@ internal class ContentOps(
         }
     }
 
-    fun append(start: BlockID, content: Content) {
+    fun append(start: BlockID, content: ByteArray) {
         //find last block
         var currentBlock = blockSpace.readBlock(start)
         while (currentBlock.nextBlock != EB) {
