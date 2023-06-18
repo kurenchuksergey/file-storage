@@ -25,10 +25,10 @@ fun UsedSpaceMap.isFree(blockID: BlockID) = !this[blockID]
  * BlockSpace is blocks storage, which also include used blocks map (free map inverse)
  */
 internal class BlockSpace(
-    private val blockCount: Int,
-    private val blockSize: Int, //byte
-    private val offset: Long,
-    private val channel: FileChannel,
+        private val blockCount: Int,
+        private val blockSize: Int, //byte
+        private val offset: Long,
+        private val channel: FileChannel,
 ) : Closeable {
 
     private val spaceMap: UsedSpaceMap
@@ -57,8 +57,8 @@ internal class BlockSpace(
         spaceMap.markUse(block.blockID)
 
         val flushedBytes = channel
-            .moveToBlock(blockID = block.blockID)
-            .write(ByteBuffer.wrap(block.serialize()))
+                .moveToBlock(blockID = block.blockID)
+                .write(ByteBuffer.wrap(block.serialize()))
         assert(flushedBytes == blockSize) {
             "content should be flushed fully. Flushed: $flushedBytes, blockID: ${block.blockID}"
         }
@@ -96,16 +96,20 @@ internal class BlockSpace(
     }
 
     private fun FileChannel.moveToBlock(blockID: BlockID) =
-        this.position(offset + blockCount / 8 + blockSize * blockID)
+            this.position(offset + blockCount / 8 + blockSize * blockID)
 
 
     private fun saveSpaceMap() {
         channel.position(offset).write(
-            ByteBuffer.allocate(blockCount / 8).put(spaceMap.toByteArray()).fromStart()
+                ByteBuffer.allocate(blockCount / 8).put(spaceMap.toByteArray()).fromStart()
         )
         logger.log(Level.FINEST) {
             "UsedSpaceMap was flushed"
         }
+    }
+
+    fun getFreeSpace(): Long {
+        return (0..blockCount).filter { isEmpty(it) }.sumOf { blockSize }.toLong()
     }
 
     override fun close() {

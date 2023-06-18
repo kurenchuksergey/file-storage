@@ -21,9 +21,21 @@ class StorageBuilder {
     private var storageType: StorageType = StorageType.EFFICIENT
     private var expectedSize: Int = 100 * 1024 * 1024 //100MB
     private var storagePath: Path? = null
+    private var measured = false
+    private var id: String? = null
 
     fun fast(): StorageBuilder {
         storageType = StorageType.FAST
+        return this
+    }
+
+    fun id(id: String): StorageBuilder {
+        this.id = id
+        return this
+    }
+
+    fun measured(measured: Boolean): StorageBuilder {
+        this.measured = measured
         return this
     }
 
@@ -63,26 +75,36 @@ class StorageBuilder {
         //predefined params
         val blockSize = if (storageType == StorageType.EFFICIENT) 32 * 1024 else 128 * 1024
         val hierarchySpaceSize =
-            if (hierarchyType == StorageHierarchyType.SMALL) 1 * 1024 * 1024 else 2 * 1024 * 1024
+                if (hierarchyType == StorageHierarchyType.SMALL) 1 * 1024 * 1024 else 2 * 1024 * 1024
         var blockCounter = expectedSize / Block.efficiently(blockSize) + 1
         blockCounter += 8 - blockCounter % 8
 
         val meta = Meta(
-            blockCounter = blockCounter,
-            blockSize = blockSize,
-            hierarchySpaceSize = hierarchySpaceSize
+                blockCounter = blockCounter,
+                blockSize = blockSize,
+                hierarchySpaceSize = hierarchySpaceSize
         )
+
+        assert(id != null){
+            "ID should be present"
+        }
 
         RandomAccessFile(storagePath!!.toFile(), "rw").use {
             it.channel.write(ByteBuffer.wrap(meta.serialize()))
             HierarchySpace.initNew(
-                spaceSize = meta.hierarchySpaceSize,
-                offset = Meta.OBJECT_SIZE.toLong(),
-                separator = Storage.FILE_SEPARATOR,
-                it.channel
+                    spaceSize = meta.hierarchySpaceSize,
+                    offset = Meta.OBJECT_SIZE.toLong(),
+                    separator = StorageImpl.FILE_SEPARATOR,
+                    it.channel
             )
         }
 
-        return Storage(storagePath!!)
+        return StorageImpl(storagePath!!).let {
+            if (measured) {
+                MeasuredStorage(id!!, it)
+            } else {
+                it
+            }
+        }
     }
 }

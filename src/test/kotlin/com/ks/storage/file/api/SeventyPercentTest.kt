@@ -17,12 +17,13 @@ class SeventyPercentTest {
 
         val path = Files.createTempFile("storage", ".data")
 
-        val localStorage = Storage.new()
-            .efficient()
-            .path(path)
-            .size(sourceData.size + (sourceData.size * 0.3).roundToInt()) //70%
-            .smallHierarchy()
-            .build()
+        val localStorage = StorageImpl.new()
+                .id("70percent-storage")
+                .efficient()
+                .path(path)
+                .size(sourceData.size + (sourceData.size * 0.3).roundToInt()) //70%
+                .smallHierarchy()
+                .build()
 
         val sourceFile = File("/testFolder/test.jpg", sourceData)
 
@@ -40,12 +41,13 @@ class SeventyPercentTest {
 
         val path = Files.createTempFile("storage", ".data")
 
-        val localStorage = Storage.new()
-            .efficient()
-            .path(path)
-            .size(sourceData.size + (sourceData.size * 0.01).roundToInt()) //99%
-            .smallHierarchy()
-            .build()
+        val localStorage = StorageImpl.new()
+                .id("99percent-storage")
+                .efficient()
+                .path(path)
+                .size(sourceData.size + (sourceData.size * 0.01).roundToInt()) //99%
+                .smallHierarchy()
+                .build()
 
         val sourceFile = File("/testFolder/test.jpg", sourceData)
 

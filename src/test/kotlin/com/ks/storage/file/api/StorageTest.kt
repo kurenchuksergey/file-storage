@@ -1,7 +1,7 @@
 package com.ks.storage.file.api
 
 import com.ks.storage.file.space.hierarchy.NodeNotFound
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.io.ByteArrayOutputStream
@@ -9,15 +9,22 @@ import java.io.FileInputStream
 import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.concurrent.atomic.AtomicInteger
 
 class StorageTest {
 
-    private fun getStorage() = Storage.new()
-        .efficient()
-        .path(Files.createTempFile("storage", ".data"))
-        .size(10 * 1024 * 1024)
-        .smallHierarchy()
-        .build()
+    companion object {
+        private val counter = AtomicInteger(0)
+
+        private fun getStorage() = StorageImpl.new()
+                .efficient()
+                .id("test-storage-" + counter.incrementAndGet())
+                .measured(true)
+                .path(Files.createTempFile("storage", ".data"))
+                .size(10 * 1024 * 1024)
+                .smallHierarchy()
+                .build()
+    }
 
     @Test
     fun `file import and export`() {
@@ -64,12 +71,13 @@ class StorageTest {
     @Test
     fun `init - fill - close - load - check`() {
         val path = Files.createTempFile("storage", ".data")
-        val localStorage = Storage.new()
-            .efficient()
-            .path(path)
-            .size(10 * 1024 * 1024)
-            .smallHierarchy()
-            .build()
+        val localStorage = StorageImpl.new()
+                .id("my-local-storage")
+                .efficient()
+                .path(path)
+                .size(10 * 1024 * 1024)
+                .smallHierarchy()
+                .build()
 
         val sourceData = FileTest::class.java.classLoader.getResourceAsStream("fixture.jpg").use {
             readResource(it!!)
@@ -79,7 +87,7 @@ class StorageTest {
             localStorage.createFile(file)
         }
 
-        val loadedStorage = Storage(path)
+        val loadedStorage = StorageImpl(path)
         val loadedFile = loadedStorage.getFile("/testFolder/testFile")
         assertTrue(sourceData.contentEquals(loadedFile.content))
     }

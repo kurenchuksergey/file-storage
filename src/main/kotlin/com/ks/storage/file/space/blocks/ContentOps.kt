@@ -98,6 +98,10 @@ internal class ContentOps(
         write(currentBlock.blockID, currentBlock.getContent() + content)
     }
 
+    fun getFreeSpace(): Long {
+        return blockSpace.getFreeSpace()
+    }
+
     companion object {
         private val logger: Logger = Logger.getLogger(ContentOps::class.java.simpleName)
     }
